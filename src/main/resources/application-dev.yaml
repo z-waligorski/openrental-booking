@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: openrental-booking
+  datasource:
+    url: jdbc:postgresql://localhost:5432/OpenRental-Booking
+    username: postgres
+    password: ${postgres-password}
