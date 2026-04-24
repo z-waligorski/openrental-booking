@@ -17,5 +17,5 @@ public record CarAvailabilityRequestDTO(String brand,
                                         LocalDate startDate,
                                         @NotNull
                                         @Future
-                                        LocalDate endDate) {
+                                        LocalDate endDate) implements HavingDateRange {
 }
