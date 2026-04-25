@@ -4,6 +4,7 @@ import com.eprogram.openrental_booking.dto.BookingDTO;
 import com.eprogram.openrental_booking.dto.CarDTO;
 import com.eprogram.openrental_booking.exception.BookingNotFoundException;
 import com.eprogram.openrental_booking.exception.BookingNotValidException;
+import com.eprogram.openrental_booking.exception.VehicleNotFoundException;
 import com.eprogram.openrental_booking.mapper.BookingMapper;
 import com.eprogram.openrental_booking.model.Booking;
 import com.eprogram.openrental_booking.repository.BookingRepository;
@@ -40,7 +41,7 @@ public class BookingServiceTest {
 
     @Test
     void getCarsAvailableForFiltersAndDates_shouldReturnCars_whenNoneIsBooked() {
-        when(vehicleService.getFilteredVehiclesIds(null, null, null, null))
+        when(vehicleService.getFilteredCars(null, null, null, null))
                 .thenReturn(getListOfCars());
 
         when(bookingRepository.findBookedVehicleIdsInPeriod(
@@ -54,7 +55,7 @@ public class BookingServiceTest {
 
     @Test
     void getCarsAvailableForFiltersAndDates_shouldReturnEmptyList_whenAllAreBooked() {
-        when(vehicleService.getFilteredVehiclesIds(null, null, null, null))
+        when(vehicleService.getFilteredCars(null, null, null, null))
                 .thenReturn(getListOfCars());
 
         when(bookingRepository.findBookedVehicleIdsInPeriod(
@@ -68,7 +69,7 @@ public class BookingServiceTest {
 
     @Test
     void getCarsAvailableForFiltersAndDates_shouldReturnList_whenPartIsBooked() {
-        when(vehicleService.getFilteredVehiclesIds(null, null, null, null))
+        when(vehicleService.getFilteredCars(null, null, null, null))
                 .thenReturn(getListOfCars());
 
         when(bookingRepository.findBookedVehicleIdsInPeriod(
@@ -85,7 +86,7 @@ public class BookingServiceTest {
 
     @Test
     void getCarsAvailableForFiltersAndDates_shouldReturnEmptyList_whenNoCarsFound() {
-        when(vehicleService.getFilteredVehiclesIds(null, null, null, null))
+        when(vehicleService.getFilteredCars(null, null, null, null))
                 .thenReturn(Collections.emptyList());
 
         assertEquals(0, bookingService.getCarsAvailableForFiltersAndDates(getCarAvailabilityDTOWithCorrectDatesOnly()).size());
@@ -101,6 +102,7 @@ public class BookingServiceTest {
 
         when(bookingRepository.findBookedVehicleIdsInPeriod(anyCollection(), any(LocalDate.class), any(LocalDate.class)))
                 .thenReturn(Collections.emptySet());
+        when(vehicleService.carExists(inputDTO.vehicleId())).thenReturn(true);
         when(bookingMapper.toEntity(inputDTO)).thenReturn(inputBooking);
         when(bookingRepository.save(inputBooking)).thenReturn(savedBooking);
         when(bookingMapper.toDTO(savedBooking)).thenReturn(outputDTO);
@@ -122,6 +124,19 @@ public class BookingServiceTest {
                 .thenReturn(Set.of(inputDTO.vehicleId()));
 
         assertThrows(BookingNotValidException.class, () -> bookingService.validateAndSaveBooking(inputDTO));
+        verifyNoInteractions(bookingMapper);
+        verifyNoMoreInteractions(bookingRepository);
+    }
+
+    @Test
+    void validateAndSaveBooking_shouldThrowException_whenVehicleNotFound() {
+        BookingDTO inputDTO = getInputBookingDTO();
+
+        when(bookingRepository.findBookedVehicleIdsInPeriod(anyCollection(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(Collections.emptySet());
+        when(vehicleService.carExists(inputDTO.vehicleId())).thenReturn(false);
+
+        assertThrows(VehicleNotFoundException.class, () -> bookingService.validateAndSaveBooking(inputDTO));
         verifyNoInteractions(bookingMapper);
         verifyNoMoreInteractions(bookingRepository);
     }

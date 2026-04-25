@@ -5,6 +5,7 @@ import com.eprogram.openrental_booking.dto.CarAvailabilityRequestDTO;
 import com.eprogram.openrental_booking.dto.CarDTO;
 import com.eprogram.openrental_booking.exception.BookingNotFoundException;
 import com.eprogram.openrental_booking.exception.BookingNotValidException;
+import com.eprogram.openrental_booking.exception.VehicleNotFoundException;
 import com.eprogram.openrental_booking.mapper.BookingMapper;
 import com.eprogram.openrental_booking.model.Booking;
 import com.eprogram.openrental_booking.repository.BookingRepository;
@@ -24,7 +25,7 @@ public class BookingService {
     private final BookingMapper bookingMapper;
 
     public List<CarDTO> getCarsAvailableForFiltersAndDates(CarAvailabilityRequestDTO dto) {
-        List<CarDTO> matchingCars = vehicleService.getFilteredVehiclesIds(dto.brand(), dto.model(),
+        List<CarDTO> matchingCars = vehicleService.getFilteredCars(dto.brand(), dto.model(),
                 dto.minYearOfProduction(), dto.seats());
         if (matchingCars.isEmpty()) {
             return matchingCars;
@@ -49,7 +50,11 @@ public class BookingService {
         if(!alreadyBookedIds.isEmpty()) {
             throw new BookingNotValidException();
         }
-        // TODO check also if vehicle id is valid
+
+        if(!vehicleService.carExists(bookingDTO.vehicleId())) {
+            throw new VehicleNotFoundException(bookingDTO.vehicleId());
+        }
+
         Booking savedBooking = bookingRepository.save(bookingMapper.toEntity(bookingDTO));
         return bookingMapper.toDTO(savedBooking);
     }

@@ -28,4 +28,22 @@ public class ExceptionHandler {
 
         return new ErrorResponse(allErrors);
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleBookingNotValidException(BookingNotValidException e) {
+        return e.getMessage();
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleBookingNotFoundException(BookingNotFoundException e) {
+        return e.getMessage();
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleVehicleNotFoundException(VehicleNotFoundException e) {
+        return e.getMessage();
+    }
 }

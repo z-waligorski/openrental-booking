@@ -4,4 +4,9 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/OpenRental-Booking
     username: postgres
-    password: ${postgres-password}
+    password: ${postgres-password:postgres}
+server:
+  port: 8081
+services:
+  vehicles:
+    url: http://localhost:8080
