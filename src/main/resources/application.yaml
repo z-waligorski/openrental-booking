@@ -2,6 +2,9 @@ spring:
   application:
     name: openrental-booking
   datasource:
-    url: jdbc:postgresql://${PGSQL_SERVICE_HOST}:${PGSQL_SERVICE_PORT}/OpenRental-Booking
-    username: postgres
-    password: ${postgres-password}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+services:
+  vehicles:
+    url: ${SERVICES_VEHICLES_URL}

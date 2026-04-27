@@ -2,9 +2,8 @@ spring:
   application:
     name: openrental-booking
   datasource:
-    url: jdbc:postgresql://localhost:5432/OpenRental-Booking
+    url: jdbc:postgresql://localhost:5432/openrental_booking
     username: postgres
-    password: ${postgres-password:postgres}
 server:
   port: 8081
 services:
