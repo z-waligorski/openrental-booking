@@ -1,4 +1,4 @@
-package com.eprogram.openrental_booking.exception;
+package com.eprogram.openrental_booking.exception.booking;
 
 public class BookingNotValidException extends RuntimeException {
     public BookingNotValidException() {

@@ -1,5 +1,9 @@
-package com.eprogram.openrental_booking.exception;
+package com.eprogram.openrental_booking.exception.api;
 
+import com.eprogram.openrental_booking.exception.booking.BookingNotFoundException;
+import com.eprogram.openrental_booking.exception.booking.BookingNotValidException;
+import com.eprogram.openrental_booking.exception.integration.VehicleNotFoundException;
+import com.eprogram.openrental_booking.exception.integration.VehiclesServiceUnavailableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -9,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestControllerAdvice
-public class ExceptionHandler {
+public class GlobalExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -27,6 +31,12 @@ public class ExceptionHandler {
         allErrors.addAll(globalErrors);
 
         return new ErrorResponse(allErrors);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public String handleExternalServiceUnavailable(VehiclesServiceUnavailableException e) {
+        return e.getMessage();
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler

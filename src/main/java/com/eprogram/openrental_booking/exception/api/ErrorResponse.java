@@ -1,4 +1,4 @@
-package com.eprogram.openrental_booking.exception;
+package com.eprogram.openrental_booking.exception.api;
 
 import java.util.List;
 

@@ -2,9 +2,9 @@ package com.eprogram.openrental_booking.service;
 
 import com.eprogram.openrental_booking.dto.BookingDTO;
 import com.eprogram.openrental_booking.dto.CarDTO;
-import com.eprogram.openrental_booking.exception.BookingNotFoundException;
-import com.eprogram.openrental_booking.exception.BookingNotValidException;
-import com.eprogram.openrental_booking.exception.VehicleNotFoundException;
+import com.eprogram.openrental_booking.exception.booking.BookingNotFoundException;
+import com.eprogram.openrental_booking.exception.booking.BookingNotValidException;
+import com.eprogram.openrental_booking.exception.integration.VehicleNotFoundException;
 import com.eprogram.openrental_booking.mapper.BookingMapper;
 import com.eprogram.openrental_booking.model.Booking;
 import com.eprogram.openrental_booking.repository.BookingRepository;

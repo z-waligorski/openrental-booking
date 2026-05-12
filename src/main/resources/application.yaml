@@ -8,3 +8,23 @@ spring:
 services:
   vehicles:
     url: ${SERVICES_VEHICLES_URL}
+resilience4j:
+  circuitbreaker:
+    instances:
+      vehicles-service-circuit-breaker:
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 15s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        ignoreExceptions:
+          - com.eprogram.openrental_booking.exception.integration.VehiclesServiceInvalidRequestException
+  retry:
+    instances:
+      vehicles-service-retry:
+        max-attempts: 3
+        wait-duration: 1s
+        ignoreExceptions:
+          - com.eprogram.openrental_booking.exception.integration.VehiclesServiceInvalidRequestException

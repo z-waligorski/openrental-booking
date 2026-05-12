@@ -1,4 +1,4 @@
-package com.eprogram.openrental_booking.exception;
+package com.eprogram.openrental_booking.exception.booking;
 
 import java.util.UUID;
 
