@@ -1,74 +1,93 @@
-# OpenRental Booking Service
+# OpenRental Booking
 
-Microservice responsible for vehicle bookings and availability checks.
+OpenRental Booking is a Spring Boot service for managing bookings in a rental system.
+It provides backend functionality for managing rental bookings, including booking creation, retrieval, and integration with persistence and deployment infrastructure.
 
 ## Features
 
-- Check vehicle availability for selected dates
-- Create vehicle bookings
-- Communication with Vehicles Service
-- PostgreSQL persistence
-- Docker support
-- Kubernetes deployment
+- Booking management for rental resources
+- Integration with OpenRental Vehicles application
+- REST-style API support
+- Database-backed persistence
+- Spring-based application architecture
+- Container-ready deployment
+- Kubernetes deployment support
+- Environment-based configuration for secure runtime settings
 
 ## Tech Stack
 
 - Java 25
-- Spring Boot 4
-- PostgreSQL
-- RestClient
+- Spring MVC
+- Spring Data JPA
 - Maven
 - Docker
-- Kubernetes (kind)
+- Kubernetes
+- Relational database support through JDBC/JPA
 
-## Architecture
+## Requirements
 
-Booking Service communicates with Vehicles Service via REST API.
+Before running the project, make sure you have the following installed:
 
-Flow:
-1. Booking Service requests matching vehicles from Vehicles Service
-2. Booking Service filters unavailable vehicles based on existing reservations
-3. Available vehicles are returned to the client
+- Java 25
+- Maven, or use the included Maven Wrapper
+- Docker, if running with containers
+- Kubernetes CLI, if deploying to Kubernetes
+- PostgreSQL, if running without Docker
 
-Booking Service also checks the existence of a vehicle before saving a reservation.
+## Configuration
 
-## Run with Kubernetes
+The application should be configured using environmental variables or external configuration files.
 
-Build image:
+Common environmental variables may include:
+```bash
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/openrental_booking 
+SPRING_DATASOURCE_USERNAME=your_username 
+SPRING_DATASOURCE_PASSWORD=your_password
+```
+
+## Build the Application
+
+Using the Maven Wrapper:
 ```bash
 ./mvnw clean package
-
-docker build -t openrental-booking:1.0 .
-
-kind load docker-image openrental-booking:1.0 --name openrental
 ```
-Deploy (files in project openrental-infra):
+
+## Run Locally
+
+After building the project, run the generated JAR:
 ```bash
-kubectl apply -f k8s/base/booking
+java -jar target/*.jar
 ```
 
-## Access API
-```bash
-kubectl port-forward service/booking 8081:8080
-```
-API available at:
-
-http://localhost:8081
-
-## API Examples
-
-### Check available vehicles
-
-GET /booking/api/v1/available-cars
-
-Example:
+By default, the service runs on:
 ```text
-/booking/api/v1/available-cars?brand=Honda&seats=5&startDate=2026-10-07&endDate=2026-10-08
+localhost:8080
 ```
-## Planned Improvements
 
-- Authentication & Authorization
-- Notification service
-- Kafka integration
-- API Gateway / Ingress
+## Run with Docker
+Build the Docker image:
+```bash 
+docker build -t openrental-booking .
+```
+Run the container:
+```bash 
+docker run -p 8081:8080
+-e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/openrental_booking
+-e SPRING_DATASOURCE_USERNAME=your_username
+-e SPRING_DATASOURCE_PASSWORD=your_password
+openrental-booking
+```
 
+The service will be available at:
+```text
+localhost:8081
+```
+
+## Run with Docker Compose
+Requires setting value for POSTGRES_PASSWORD environmental variable.
+```bash 
+docker compose up --build
+```
+
+## Run with Kubernetes
+Apply the Kubernetes manifests from the project openrental-infra.
